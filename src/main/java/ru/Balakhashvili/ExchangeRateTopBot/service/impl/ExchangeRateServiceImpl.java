@@ -12,12 +12,15 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.StringReader;
+import java.text.DecimalFormat;
 
 @Service
 public class ExchangeRateServiceImpl implements ExchangeRateService {
 
     private static final String USD_XPATH = "/ValCurs//Valute[@ID='R01235']/Value";
     private static final String EUR_XPATH = "/ValCurs//Valute[@ID='R01239']/Value";
+    private static final String GEL_XPATH = "/ValCurs//Valute[@ID='R01210']/Value";
+    private static final String TRY_XPATH = "/ValCurs//Valute[@ID='R01700J']/VunitRate";
 
     @Autowired
     private CbrClient client;
@@ -28,10 +31,23 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
         return extractCurrencyValueFromXML(xml, USD_XPATH);
     }
 
+
     @Override
     public String getEURExchangeRate() throws ServiceException {
         var xml = client.getCurrencyRatesXML();
         return extractCurrencyValueFromXML(xml, EUR_XPATH);
+    }
+
+    @Override
+    public String getGELExchangeRate() throws ServiceException {
+        var xml = client.getCurrencyRatesXML();
+        return extractCurrencyValueFromXML(xml, GEL_XPATH);
+    }
+
+    @Override
+    public String getTRYExchangeRate() throws ServiceException {
+        var xml = client.getCurrencyRatesXML();
+        return extractCurrencyValueFromXML(xml, TRY_XPATH);
     }
 
     private static String extractCurrencyValueFromXML (String xml, String xpathExpression) throws ServiceException {

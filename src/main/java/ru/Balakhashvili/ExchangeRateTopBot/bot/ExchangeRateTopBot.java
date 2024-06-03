@@ -13,6 +13,7 @@ import ru.Balakhashvili.ExchangeRateTopBot.exception.ServiceException;
 import ru.Balakhashvili.ExchangeRateTopBot.service.ExchangeRateService;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 
 @Component
@@ -23,6 +24,8 @@ public class ExchangeRateTopBot extends TelegramLongPollingBot {
     private static final String START = "/start";
     private static final String USD = "/usd";
     private static final String EUR = "/eur";
+    private static final String GEL = "/gel";
+    private static final String TRY = "/try";
     private static final String HELP = "/help";
 
     @Autowired
@@ -46,6 +49,8 @@ public class ExchangeRateTopBot extends TelegramLongPollingBot {
             }
             case USD -> usdCommand(chatId);
             case EUR -> eurCommand(chatId);
+            case GEL -> gelCommand(chatId);
+            case TRY -> tryCommand(chatId);
             case HELP -> helpCommand(chatId);
             default -> unknownCommand(chatId);
         }
@@ -66,6 +71,8 @@ public class ExchangeRateTopBot extends TelegramLongPollingBot {
                 Для этого воспользуйтесь командами:
                 /usd - курс доллара
                 /eur - курс евро
+                /gel - курс грузинского лари
+                /try - курс турецкой лиры
                 
                 Дополнительные команды:
                 /help - получение справки
@@ -75,12 +82,15 @@ public class ExchangeRateTopBot extends TelegramLongPollingBot {
 
     }
 
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    String fld = dtf.format(LocalDate.now());
+
     private void usdCommand(Long chatId) {
         String formattedText;
         try {
             var usd = exchangeRateService.getUSDExchangeRate();
             var text = "Курс доллара на %s составляет %s рублей";
-            formattedText = String.format(text, LocalDate.now(), usd);
+            formattedText = String.format(text, fld, usd);
         } catch (ServiceException e) {
             LOG.error("Ошибка получения курса доллара", e);
             formattedText = "Не удалось получить текущий курс доллара. Попробуйте позже.";
@@ -94,10 +104,38 @@ public class ExchangeRateTopBot extends TelegramLongPollingBot {
         try {
             var eur = exchangeRateService.getEURExchangeRate();
             var text = "Курс евро на %s составляет %s рублей";
-            formattedText = String.format(text, LocalDate.now(), eur);
+            formattedText = String.format(text, fld, eur);
         } catch (ServiceException e) {
             LOG.error("Ошибка получения курса евро", e);
             formattedText = "Не удалось получить текущий курс евро. Попробуйте позже.";
+        }
+        sendMessage(chatId, formattedText);
+
+    }
+
+    private void gelCommand(Long chatId) {
+        String formattedText;
+        try {
+            var gel = exchangeRateService.getGELExchangeRate();
+            var text = "Курс грузинского лари на %s составляет %s рублей";
+            formattedText = String.format(text, fld, gel);
+        } catch (ServiceException e) {
+            LOG.error("Ошибка получения курса лари", e);
+            formattedText = "Не удалось получить текущий курс лари. Попробуйте позже.";
+        }
+        sendMessage(chatId, formattedText);
+
+    }
+
+    private void tryCommand(Long chatId) {
+        String formattedText;
+        try {
+            var tyr = exchangeRateService.getTRYExchangeRate();
+            var text = "Курс турецкой лиры на %s составляет %s рублей";
+            formattedText = String.format(text, fld, tyr);
+        } catch (ServiceException e) {
+            LOG.error("Ошибка получения курса лиры", e);
+            formattedText = "Не удалось получить текущий курс лиры. Попробуйте позже.";
         }
         sendMessage(chatId, formattedText);
 
@@ -110,6 +148,8 @@ public class ExchangeRateTopBot extends TelegramLongPollingBot {
                 Для получения текущих курсов валют воспользуйтесь коммандами:
                 /usd - курс доллара
                 /eur - курс евро
+                /gel - курс грузинского лари
+                /try - курс турецкой лиры
                 """;
         sendMessage(chatId, text);
     }
