@@ -2,7 +2,6 @@ package ru.Balakhashvili.ExchangeRateTopBot.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import ru.Balakhashvili.ExchangeRateTopBot.client.CbrClient;
