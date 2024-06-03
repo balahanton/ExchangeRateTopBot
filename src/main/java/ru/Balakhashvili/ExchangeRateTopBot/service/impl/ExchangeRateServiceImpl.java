@@ -12,7 +12,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.StringReader;
-import java.text.DecimalFormat;
 
 @Service
 public class ExchangeRateServiceImpl implements ExchangeRateService {
