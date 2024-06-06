@@ -18,4 +18,18 @@ public interface ExchangeRateService {
     String getAMDExchangeRate() throws ServiceException; //Армянский драм
     String getBYNExchangeRate() throws ServiceException; //Белорусский рубль
     String getKZTExchangeRate() throws ServiceException; //Казахстанский тенге
+
+    void clearUSDCache();
+    void clearEURCache();
+    void clearGELCache();
+    void clearTRYCache();
+    void clearAEDCache();
+    void clearEGPCache();
+    void clearTJSCache();
+    void clearCNYCache();
+    void clearTHBCache();
+    void clearJPYCache();
+    void clearAMDCache();
+    void clearBYNCache();
+    void clearKZTCache();
 }
